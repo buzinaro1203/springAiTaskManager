@@ -1,12 +1,4 @@
 import { useEffect, useState } from "react";
-import "../App.css";
-import Modal from "../components/Modal/Modal.jsx";
-import Filter from "../components/searchAndFilter/Filter.jsx";
-import Search from "../components/searchAndFilter/Search.jsx";
-import CreateTodo from "../components/todo/CreateTodo.jsx";
-import Todo from "../components/todo/Todo.jsx";
-import { hideLoading, showLoading } from "../utils/Loading.js";
-
 import { useNavigate } from "react-router-dom";
 import {
   alterTodo,
@@ -16,6 +8,14 @@ import {
   deleteTodo,
   fetchTodos,
 } from "../api/api.js";
+import "../App.css";
+import ChatWidget from "../components/chat/ChatWidget.jsx";
+import Modal from "../components/Modal/Modal.jsx";
+import Filter from "../components/searchAndFilter/Filter.jsx";
+import Search from "../components/searchAndFilter/Search.jsx";
+import CreateTodo from "../components/todo/CreateTodo.jsx";
+import Todo from "../components/todo/Todo.jsx";
+import { hideLoading, showLoading } from "../utils/Loading.js";
 function App() {
   const navigate = useNavigate();
   const email = localStorage.getItem("email");
@@ -25,7 +25,7 @@ function App() {
   const [sort, setSort] = useState("Asc");
   const [filter, setFilter] = useState("Incompleted");
   const [filterCategory, setFilterCategory] = useState("All");
-
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [todos, setTodos] = useState([]);
 
   // dentro do componente App
@@ -37,7 +37,9 @@ function App() {
     // Redireciona para login
     navigate("/login");
   };
-
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen);
+  };
   useEffect(() => {
     if (api == null) {
       navigate("/login");
@@ -112,67 +114,71 @@ function App() {
     }
   };
   return (
-    <div className="app">
-      <div className="header">
-        <h1>Lista de tarefas</h1>
-        <button onClick={handleLogout} className="logout-button"></button>
-      </div>
+    <div>
+      <div className={`app ${isChatOpen ? "with-chat" : ""}`}>
+        <div className="header">
+          <h1>Lista de tarefas</h1>
+          <button onClick={handleLogout} className="logout-button"></button>
+        </div>
 
-      <Search search={search} setSearch={setSearch} />
-      <Filter
-        filter={filter}
-        setFilter={setFilter}
-        sort={sort}
-        setSort={setSort}
-        filterCategory={filterCategory}
-        setFilterCategory={setFilterCategory}
-      />
-      <div className="todo-list">
-        {todos
-          .filter((todo) => {
-            if (!todo) return false;
-            return filter === "All"
-              ? true
-              : filter === "Completed"
-              ? todo.completed
-              : todo.completed === false;
-          })
-          .filter((todo) =>
-            filterCategory === "All"
-              ? true
-              : todo.categoryName === filterCategory
-          )
-          .filter((todo) =>
-            todo.title.toLowerCase().includes(search.toLowerCase())
-          )
-          .sort((a, b) =>
-            sort === "Asc"
-              ? a.title.localeCompare(b.title)
-              : sort === "Desc"
-              ? b.title.localeCompare(a.title)
-              : sort === "CreatedDate"
-              ? new Date(a.createdAt) - new Date(b.createdAt)
-              : new Date(a.dueDate) - new Date(b.dueDate)
-          )
-          .map((todo) => (
-            <Todo
-              key={todo.id}
-              todo={todo}
-              removeTodo={removeTodo}
-              completeTodo={handleComplete}
-              updateTodo={updateTodo}
-            />
-          ))}
+        <Search search={search} setSearch={setSearch} />
+        <Filter
+          filter={filter}
+          setFilter={setFilter}
+          sort={sort}
+          setSort={setSort}
+          filterCategory={filterCategory}
+          setFilterCategory={setFilterCategory}
+        />
+        <div className="todo-list">
+          {todos
+            .filter((todo) => {
+              if (!todo) return false;
+              return filter === "All"
+                ? true
+                : filter === "Completed"
+                  ? todo.completed
+                  : todo.completed === false;
+            })
+            .filter((todo) =>
+              filterCategory === "All"
+                ? true
+                : todo.categoryName === filterCategory,
+            )
+            .filter((todo) =>
+              todo.title.toLowerCase().includes(search.toLowerCase()),
+            )
+            .sort((a, b) =>
+              sort === "Asc"
+                ? a.title.localeCompare(b.title)
+                : sort === "Desc"
+                  ? b.title.localeCompare(a.title)
+                  : sort === "CreatedDate"
+                    ? new Date(a.createdAt) - new Date(b.createdAt)
+                    : new Date(a.dueDate) - new Date(b.dueDate),
+            )
+            .map((todo) => (
+              <Todo
+                key={todo.id}
+                todo={todo}
+                removeTodo={removeTodo}
+                completeTodo={handleComplete}
+                updateTodo={updateTodo}
+              />
+            ))}
 
-        <div className="create-todo-container">
-          <button className="modal-button" onClick={openModal}></button>
-          {isModalOpen && (
-            <Modal onClose={closeModal}>
-              <CreateTodo addTodo={addTodo} onClose={closeModal} />
-            </Modal>
-          )}
+          <div className="create-todo-container">
+            <button className="modal-button" onClick={openModal}></button>
+            {isModalOpen && (
+              <Modal onClose={closeModal}>
+                <CreateTodo addTodo={addTodo} onClose={closeModal} />
+              </Modal>
+            )}
+          </div>
         </div>
       </div>
+
+      <ChatWidget api={api} isOpen={isChatOpen} toggleChat={toggleChat} />
     </div>
   );
 }

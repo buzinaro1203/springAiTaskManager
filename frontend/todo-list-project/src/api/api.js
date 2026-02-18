@@ -53,3 +53,11 @@ export const completeTodo = async (api, id, todo) => {
   const response = await api.put(`/todos/${id}`, updatedTodo);
   return response.data;
 };
+
+export const sendToAgent = async (api, message) => {
+  const response = await api.get(
+    `/ai/chat?message=${encodeURIComponent(message)}`,
+  );
+
+  return response.data; // string pura
+};
