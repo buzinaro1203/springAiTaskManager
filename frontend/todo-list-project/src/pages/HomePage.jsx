@@ -178,7 +178,7 @@ function App() {
         </div>
       </div>
 
-      <ChatWidget api={api} isOpen={isChatOpen} toggleChat={toggleChat} />
+      <ChatWidget setTodos={setTodos} fetchTodos={fetchTodos} api={api} isOpen={isChatOpen} toggleChat={toggleChat} />
     </div>
   );
 }

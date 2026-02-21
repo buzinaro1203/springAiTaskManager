@@ -2,31 +2,36 @@ import { useEffect, useRef, useState } from "react";
 import { sendToAgent } from "../../api/api.js";
 
 import "./chatWidget.css";
-const ChatWidget = ({ api, isOpen, toggleChat }) => {
-  const [messages, setMessages] = useState([{ role: "bot", text: "Olá 👋" }]);
+const ChatWidget = ({ setTodos, fetchTodos, api, isOpen, toggleChat }) => {
+  const [messages, setMessages] = useState([{ role: "assistant", text: "Olá 👋" }]);
   const [input, setInput] = useState("");
   const bottomRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    const text = input;
-
-    setMessages((prev) => [...prev, { role: "user", text }]);
+    const userMessage = { role: "user", text: input };
+    setMessages(prev => [...prev, userMessage]);
 
     setInput("");
+    setIsLoading(true);
 
     try {
-      const reply = await sendToAgent(api, text);
+      const aiResponse = await sendToAgent(api, input);
 
-      setMessages((prev) => [...prev, { role: "bot", text: reply }]);
-    } catch (err) {
-      console.error(err);
-
-      setMessages((prev) => [
+      setMessages(prev => [
         ...prev,
-        { role: "bot", text: "Erro ao conectar com IA." },
+        { role: "assistant", text: aiResponse }
       ]);
+
+      const updatedTodos = await fetchTodos(api);
+      setTodos(updatedTodos);
+
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -67,9 +72,12 @@ const ChatWidget = ({ api, isOpen, toggleChat }) => {
           {messages.map((message, index) => (
             <div key={index} className={`chat-bubble ${message.role}`}>
               {message.text}
-              <div ref={bottomRef} />
             </div>
           ))}
+          {isLoading && (
+            <div className="chat-bubble assistant typing">digitando...</div>
+          )}
+          <div ref={bottomRef} />
         </div>
 
         <div className="chat-input-area">
@@ -82,9 +90,14 @@ const ChatWidget = ({ api, isOpen, toggleChat }) => {
             onKeyDown={(e) => {
               if (e.key === "Enter") handleSend();
             }}
+            disabled={isLoading}
           />
 
-          <button onClick={handleSend} className="chat-send"></button>
+          <button
+            onClick={handleSend}
+            disabled={isLoading}
+            className="chat-send"
+          ></button>
         </div>
       </div>
     </div>
