@@ -1,152 +1,91 @@
-# 📝 Task Manager - Desafio de Estágio
+# Spring AI Task Manager
 
-[![React](https://img.shields.io/badge/Frontend-React-blue?logo=react)](https://reactjs.org/)
-[![Spring Boot](https://img.shields.io/badge/Backend-Spring%20Boot-brightgreen?logo=springboot)](https://spring.io/projects/spring-boot)
-[![MySQL](https://img.shields.io/badge/Database-MySQL-blue?logo=mysql)](https://www.mysql.com/)
-[![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](https://vercel.com/)
-[![Render](https://img.shields.io/badge/Deploy-Render-red?logo=render)](https://render.com/)
+## 🚀 Overview
+Spring AI Task Manager is a simple task management application with a backend API built in Java and a frontend built in React. This task manager includes an AI agent implemented using Spring AI.
 
-**Link para o front-end:** [Task Manager](https://nextage-to-do-list-gtt6.vercel.app)
-**Link para o back-end:** [Task Manager](https://nextage-to-do-list.onrender.com/)
-
-> ⚠️ Ao iniciar a aplicação, o backend pode demorar a responder devido ao Render colocar a aplicação em _sleeping mode_.
-
----
-
-## 📌 Descrição do Projeto
-
-A aplicação **Task Manager** é uma plataforma para gerenciamento de tarefas, permitindo aos usuários criar, visualizar, editar e organizar suas tarefas com categorias associadas.
-
-A aplicação combina:
-
-- **Front-end:** React
-- **Back-end:** Spring Boot
-- **Banco de dados:** MySQL
-
-Seguindo boas práticas de modularização, comunicação via API REST e padrões de design.
+## 🧠 Features
+- Sign-in and sign-up system
+- Create, delete, edit, and complete tasks
+- Java API with a MySQL database
+- Search tool
+- Filter tool
+- AI assistant with integrated tools. The assistant can create, complete, delete, and reschedule tasks
+- The AI assistant has a context window of 20 messages
 
 ---
 
-## 🚀 Funcionalidades
-
-- [x] Criação de tarefas
-- [x] Visualização de tarefas
-- [x] Edição de tarefas
-- [x] Marcação de conclusão
-- [x] Exclusão de tarefas
-- [x] Autenticação de usuário
-- [x] Filtros e ordenação
-- [x] Ferramenta de pesquisa
-- [x] Deploy
-- [x] Registro de data de vencimento para tarefas
+## 🏗 Architecture
+- This project follows a layered architecture based on MVC principles.
+- DTOs are used to transfer data without exposing the domain models.
+- Mappers are used to transform DTOs into models and vice versa.
+- A configuration layer is responsible for CORS and security settings.
+- Security uses Basic Authentication with email and password.
+- The AI module is separated into dedicated components.
+- Controllers handle HTTP requests.
+- Services contain business logic.
+- Repositories extend `JpaRepository` for database access.
 
 ---
 
-## 🛠 Tecnologias Utilizadas
+## 🛠 Tech Stack
+- **Backend:** Java 17, Spring Boot ecosystem
+- **Database:** MySQL
+- **Frontend:** React.js (Vite)
+- **AI Integration:** Spring AI with Gemini 2.5 Flash
 
-- **Frontend:** React
-- **Backend:** Java Spring Boot
-- **Banco de Dados:** MySQL
-- **Deploy:** Vercel (frontend), Render (backend), Railway (banco de dados)
-- **Outras:** Axios (consumo de API)
+## ⚙️ Installation
+### Prerequisites
+Java 17+, Maven, Node.js, MySQL, Git
 
----
-
-## ⚙️ Como Configurar e Executar o Projeto
-
-### Pré-requisitos
-
-- Java 17+ (JDK)
-- Maven
-- Node.js e npm
-- MySQL
-- Git
-
-### Passos
-
+1. Clone the repository.
 ```bash
-# 1. Clone o repositório
-git clone https://github.com/buzinaro1203/nextage-to-do-list.git
-cd nextage-to-do-list
-
-# 2. Criar o banco de dados no MySQL
-CREATE DATABASE todolist;
-
-# 3. Configurar backend
-# Editar backend/todo-api/src/main/resources/application.properties
-spring.datasource.url=jdbc:mysql://localhost:3306/todolist?useSSL=false&serverTimezone=UTC
-spring.datasource.username=SEU_USUARIO
-spring.datasource.password=SUA_SENHA
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
-
-# 4. Instalar dependências e iniciar backend
-cd backend/todo-api
-mvn clean install
-mvn spring-boot:run
-
-# 5. Instalar dependências do frontend
-cd ../../frontend/todo-list-project
-npm install
-
-# 6. Configurar API
-# No arquivo api.js, definir BASE_URL apontando para o backend (ex.: http://localhost:8080)
-
-# 7. Iniciar frontend
-npm start
-# ou
-npm run dev
+git clone https://github.com/buzinaro1203/springAiTaskManager.git
+cd springAiTaskManager
 ```
+2. Backend setup.
+- Configure `application.properties`
+- Add your database credentials
+- Add your Gemini API key
+- Run the backend `mvn spring-boot:run`
 
-🏗 Estrutura do Projeto
+3. Frontend setup.
+- Navigate to frontend/todo-list-project
+- Install dependencies
+- Run the development server
+  ```
+  npm install
+  npm run dev
+  ```
+4. Access the app
+- Backend: http://localhost:8080
+- Frontend: http://localhost:5173
 
-Backend:
+---
 
-Cada entidade possui pastas separadas: Controller, Service, Repository e Model
+## 🔐 Authentication
+User authentication uses email and password. The email must follow a valid format (e.g., useremail@email.com), but it does not need to be a real email address. The password must contain at least 6 characters.
 
-Facilita localização de código e manutenção
+Endpoints are protected using Basic Authentication, which means they can only be accessed with credentials encoded from the user's email and password.
 
-Frontend:
+---
 
-Estrutura parcialmente modularizada
+## 🤖 AI Agent
+The AI agent can interact with the user like a common LLM. The difference is that it can also invoke backend functions to create, delete, complete, and reschedule tasks.
 
-Componentes isolados das páginas principais para facilitar manutenção e reutilização
+For the context window, I used the `ChatMemory` class from Spring AI. It stores the most recent messages exchanged between the user and the assistant. In this implementation, the assistant has a context window of 20 messages.
 
-Algumas partes não seguem modularização completa devido ao tamanho da aplicação
+---
 
-📐 Padrões de Design
+## 📌 Future Improvements
+- Add more AI functionalities.
+- Add notifications when a task is close to expiring.
+- Replace Basic Authentication with JWT.
+- Add login with Google.
 
-MVC (Model-View-Controller) – Backend
+---
 
-Service Layer Pattern – Backend
-
-Repository Pattern – Backend
-
-Partial Modularization / Component-Based – Frontend
-
-💾 Persistência de Dados
-
-Banco: MySQL
-
-JPA + Hibernate: Mapeamento das entidades (Todo, Category) para tabelas do banco
-
-Relacionamentos: Many-to-One entre tarefas e categorias
-
-Camadas: Repository abstrai o acesso ao banco, Service Layer trata a lógica de negócio, garantindo código limpo e modular
-
-⚠️ Desafios Encontrados
-
-Problemas com network, CORS e configuração de segurança (SecurityConfig) no Spring Boot
-
-Primeira vez lidando com essas questões, resolvido com pesquisa, persistência e testes de tentativa e erro
-
-✨ Considerações Finais
-
-Satisfeito com o resultado da aplicação, apesar de algumas funcionalidades ainda não implementadas:
-
-Recuperação de senha (esqueceu sua senha)
-
-Validação de campos no front-end (IsValid.js) para login, registro e criação de tarefas
-
-Primeiro projeto completo com React + Spring Boot + MySQL, garantindo aprendizado significativo e entrega funcional.
+## 👤 Author
+Guilherme Henrique Barbosa Buzinaro  
+Software Engineering Student  
+GitHub: https://github.com/buzinaro1203  
+LinkedIn: https://linkedin.com/in/guilhermebuzinaro
