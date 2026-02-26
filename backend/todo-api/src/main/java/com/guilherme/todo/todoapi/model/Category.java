@@ -26,6 +26,13 @@ public class Category {
   @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Todo> todos;
 
+  public Category() {
+  }
+
+  public Category(String name) {
+    this.name = name;
+  }
+
   // Getters e Setters
   public Long getId() {
     return id;

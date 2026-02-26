@@ -10,5 +10,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
   // Aqui você pode adicionar métodos personalizados se necessário
   // Exemplo: List<Category> findByName(String name);
   List<Category> findByName(String name);
+  boolean existsByName(String name);
 
 }
