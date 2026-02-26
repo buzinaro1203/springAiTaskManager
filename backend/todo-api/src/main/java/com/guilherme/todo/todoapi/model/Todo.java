@@ -15,7 +15,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "todos", schema = "todolist")
+@Table(name = "todos")
 public class Todo {
   // Fields
   @Id
