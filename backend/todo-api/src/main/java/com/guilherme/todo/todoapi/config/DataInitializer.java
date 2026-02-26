@@ -13,10 +13,10 @@ public class DataInitializer {
     CommandLineRunner initCategories(CategoryRepository repo) {
         return args -> {
 
-            createIfNotExists("pessoal", repo);
-            createIfNotExists("trabalho", repo);
-            createIfNotExists("estudos", repo);
-            createIfNotExists("outros", repo);
+            createIfNotExists("Pessoal", repo);
+            createIfNotExists("Trabalho", repo);
+            createIfNotExists("Estudos", repo);
+            createIfNotExists("Outros", repo);
         };
     }
 
