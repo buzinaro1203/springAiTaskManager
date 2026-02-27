@@ -1,4 +1,4 @@
-package com.guilherme.todo.todoapi.exception;
+package com.guilherme.todo.todoapi.exceptionHandling;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +15,11 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(UnauthorizedException.class)
   public ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException ex) {
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+  }
+
+  @ExceptionHandler(LLMQuotaExceededException.class)
+  public ResponseEntity<Object> handleLLMQuotaExceededException(LLMQuotaExceededException ex) {
+    return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(ex.getMessage());
   }
 
   @ExceptionHandler(UserAlreadyExistsException.class)

@@ -1,4 +1,4 @@
-package com.guilherme.todo.todoapi.exception;
+package com.guilherme.todo.todoapi.exceptionHandling;
 
 public class UnauthorizedException extends RuntimeException {
   public UnauthorizedException(String message) {

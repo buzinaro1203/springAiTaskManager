@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.guilherme.todo.todoapi.dto.UserDto;
-import com.guilherme.todo.todoapi.exception.UserAlreadyExistsException;
+import com.guilherme.todo.todoapi.exceptionHandling.UserAlreadyExistsException;
 import com.guilherme.todo.todoapi.mapper.UserMapper;
 import com.guilherme.todo.todoapi.model.User;
 import com.guilherme.todo.todoapi.repository.UserRepository;

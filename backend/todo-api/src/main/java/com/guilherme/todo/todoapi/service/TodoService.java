@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.guilherme.todo.todoapi.dto.TodoDTO;
-import com.guilherme.todo.todoapi.exception.ResourceNotFoundException;
-import com.guilherme.todo.todoapi.exception.UnauthorizedException;
+import com.guilherme.todo.todoapi.exceptionHandling.ResourceNotFoundException;
+import com.guilherme.todo.todoapi.exceptionHandling.UnauthorizedException;
 import com.guilherme.todo.todoapi.mapper.TodoMapper;
 import com.guilherme.todo.todoapi.model.Category;
 import com.guilherme.todo.todoapi.model.Todo;

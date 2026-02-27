@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.guilherme.todo.todoapi.dto.TodoDTO;
-import com.guilherme.todo.todoapi.exception.ResourceNotFoundException;
+import com.guilherme.todo.todoapi.exceptionHandling.ResourceNotFoundException;
 import com.guilherme.todo.todoapi.model.User;
 import com.guilherme.todo.todoapi.service.TodoService;
 import com.guilherme.todo.todoapi.service.UserService;
