@@ -1,4 +1,4 @@
-package com.guilherme.todo.todoapi.AiTools;
+package com.guilherme.todo.todoapi.ai.config;
 
 import java.util.List;
 import java.util.function.Function;
@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Description;
 
+import com.guilherme.todo.todoapi.ai.tools.AiTools;
 import com.guilherme.todo.todoapi.dto.AiSuggestion;
 import com.guilherme.todo.todoapi.dto.DateQuery;
 import com.guilherme.todo.todoapi.dto.IdentifierQuery;

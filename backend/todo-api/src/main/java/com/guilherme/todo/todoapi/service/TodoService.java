@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.guilherme.todo.todoapi.dto.TodoDTO;
 import com.guilherme.todo.todoapi.exceptionHandling.ResourceNotFoundException;
@@ -37,6 +38,7 @@ public class TodoService {
         .collect(Collectors.toList());
   }
 
+  @Transactional
   public TodoDTO createTodoForUser(TodoDTO dto, User user) {
     Category category = null;
 
@@ -46,7 +48,6 @@ public class TodoService {
           .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
     }
     Todo todo = todoMapper.toEntity(dto, category, user);
-    todo.setCreatedAt(LocalDate.now());
     todo.setUpdatedAt(null);
     Todo savedTodo = todoRepository.save(todo);
     return todoMapper.toDTO(savedTodo);
@@ -60,39 +61,27 @@ public class TodoService {
   }
 
   // Atualiza um todo de um usuário (valida que pertence ao usuário)
+  @Transactional
   public TodoDTO updateTodo(Long id, TodoDTO dto, User user) {
-    if (id == null) {
-      throw new IllegalArgumentException("ID não pode ser nulo");
-    }
-    return todoRepository.findById(id)
-        .map(todo -> {
-          if (!todo.getUser().getId().equals(user.getId())) {
-            throw new UnauthorizedException("Não autorizado");
-          }
 
-          todo.setTitle(dto.getTitle());
-          todo.setDescription(dto.getDescription());
-          todo.setCompleted(dto.isCompleted());
-          todo.setUpdatedAt(LocalDate.now());
-          todo.setDueDate(dto.getDueDate());
+    Todo todo = todoRepository.findByIdAndUser(id, user)
+        .orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada"));
 
-          if (dto.getCategoryId() != null) {
-            Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
-            todo.setCategory(category);
-          }
-
-          todo.setCompletedAt(dto.isCompleted() ? LocalDate.now() : null);
-          return todoMapper.toDTO(todoRepository.save(todo));
-        }).orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada"));
+    todo.setTitle(dto.getTitle());
+    todo.setDescription(dto.getDescription());
+    todo.setCompleted(dto.isCompleted());
+    todo.setDueDate(dto.getDueDate());
+    todo.setCompletedAt(dto.isCompleted() ? LocalDate.now() : null);
+    return todoMapper.toDTO(todo);
   }
 
   // Deleta um todo de um usuário
+  @Transactional
   public void deleteTodo(Long id, User user) {
     if (id == null) {
       throw new IllegalArgumentException("ID não pode ser nulo");
     }
-    Todo todo = todoRepository.findById(id)
+    Todo todo = todoRepository.findByIdAndUser(id, user)
         .orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada"));
     if (!todo.getUser().getId().equals(user.getId())) {
       throw new UnauthorizedException("Não autorizado");

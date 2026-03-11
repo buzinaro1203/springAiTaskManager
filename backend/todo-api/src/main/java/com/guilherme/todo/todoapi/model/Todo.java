@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 @Entity
 @Table(name = "todos")
@@ -24,6 +25,9 @@ public class Todo {
 
   @Column(nullable = false, length = 50)
   private String title;
+
+  @Version
+  private long version;
 
   @Column(length = 255)
   private String description;
@@ -122,6 +126,14 @@ public class Todo {
 
   public String getDescription() {
     return description;
+  }
+
+  public long getVersion() {
+    return version;
+  }
+
+  public void setVersion(long version) {
+    this.version = version;
   }
 
   public void setDescription(String description) {

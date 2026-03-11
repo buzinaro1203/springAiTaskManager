@@ -1,4 +1,4 @@
-package com.guilherme.todo.todoapi.AiTools;
+package com.guilherme.todo.todoapi.ai.tools;
 
 import com.guilherme.todo.todoapi.model.Category;
 import com.guilherme.todo.todoapi.repository.CategoryRepository;
@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.guilherme.todo.todoapi.dto.AiSuggestion;
 import com.guilherme.todo.todoapi.dto.DateQuery;
@@ -47,6 +48,7 @@ public class AiTools {
     this.todoRepository = todoRepository;
   }
 
+  @Transactional
   public TodoDTO parseAiSuggestionToTodo(AiSuggestion suggestion) {
     if (suggestion == null)
       return null;
@@ -69,6 +71,7 @@ public class AiTools {
         .toList();
   }
 
+  @Transactional
   public String completeTodo(IdentifierQuery i) {
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
     User user = userRepository.findByEmail(email).orElseThrow();
@@ -101,6 +104,7 @@ public class AiTools {
     return response.toString();
   }
 
+  @Transactional
   public String deleteTodo(IdentifierQuery i) {
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
     User user = userRepository.findByEmail(email).orElseThrow();
@@ -133,6 +137,7 @@ public class AiTools {
     return response.toString();
   }
 
+  @Transactional
   public String rescheduleTodo(RescheduleQuery query) {
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
     User user = userRepository.findByEmail(email).orElseThrow();

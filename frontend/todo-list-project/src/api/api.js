@@ -40,8 +40,17 @@ export const createTodo = async (api, todo) => {
 };
 
 export const alterTodo = async (api, id, todo) => {
-  const response = await api.put(`/todos/${id}`, todo);
-  return response.data;
+  try {
+    const response = await api.put(`/todos/${id}`, todo);
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 409) {
+      throw new Error(
+        "Esta tarefa foi modificada por outro usuário. Atualize antes de salvar."
+      );
+    }
+    throw error;
+  }
 };
 
 export const deleteTodo = async (api, id) => {
@@ -50,10 +59,19 @@ export const deleteTodo = async (api, id) => {
 
 export const completeTodo = async (api, id, todo) => {
   const updatedTodo = { ...todo, completed: !todo.completed };
-  const response = await api.put(`/todos/${id}`, updatedTodo);
-  return response.data;
-};
 
+  try {
+    const response = await api.put(`/todos/${id}`, updatedTodo);
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 409) {
+      throw new Error(
+        "Esta tarefa foi modificada por outro usuário. Atualize a página."
+      );
+    }
+    throw error;
+  }
+};
 export const sendToAgent = async (api, message) => {
   const response = await api.get(
     `/ai/chat?message=${encodeURIComponent(message)}`,

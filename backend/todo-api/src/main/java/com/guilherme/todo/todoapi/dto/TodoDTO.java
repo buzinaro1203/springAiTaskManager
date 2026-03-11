@@ -11,6 +11,7 @@ public class TodoDTO {
   private LocalDate createdAt;
   private LocalDate updatedAt;
   private LocalDate completedAt;
+  private long version;
   private Long userId;
   private String userEmail;
   private Long categoryId;
@@ -100,12 +101,20 @@ public class TodoDTO {
     this.dueDate = dueDate;
     this.categoryId = categoryId;
     this.categoryName = categoryName;
-    this.createdAt = LocalDate.now(); // Definindo data de criação como hoje
+    this.createdAt = createdAt; // Definindo data de criação como hoje
     this.updatedAt = updatedAt; // Definindo data de atualização como hoje
     this.completedAt = completed ? LocalDate.now() : null; // Se estiver completo,
     this.userId = userId;
     this.userEmail = userEmail;
 
+  }
+
+  public long getVersion() {
+    return version;
+  }
+
+  public void setVersion(long version) {
+    this.version = version;
   }
 
   // Getters e Setters
